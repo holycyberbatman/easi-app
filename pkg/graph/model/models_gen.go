@@ -57,20 +57,41 @@ type BusinessCaseAsIsSolution struct {
 	Title       *string `json:"title"`
 }
 
+// The shape of a business owner for a business case
+type BusinessCaseBusinessOwner struct {
+	Name *string `json:"name"`
+}
+
+// The shape of a requester for a business case
+type BusinessCaseRequester struct {
+	Name        *string `json:"name"`
+	PhoneNumber *string `json:"phoneNumber"`
+}
+
 // The shape of a solution for a business case
 type BusinessCaseSolution struct {
-	AcquisitionApproach     *string `json:"acquisitionApproach"`
-	Cons                    *string `json:"cons"`
-	CostSavings             *string `json:"costSavings"`
-	HasUI                   *string `json:"hasUi"`
-	HostingCloudServiceType *string `json:"hostingCloudServiceType"`
-	HostingLocation         *string `json:"hostingLocation"`
-	HostingType             *string `json:"hostingType"`
-	Pros                    *string `json:"pros"`
-	SecurityIsApproved      *bool   `json:"securityIsApproved"`
-	SecurityIsBeingReviewed *string `json:"securityIsBeingReviewed"`
-	Summary                 *string `json:"summary"`
-	Title                   *string `json:"title"`
+	AcquisitionApproach *string                       `json:"acquisitionApproach"`
+	Cons                *string                       `json:"cons"`
+	CostSavings         *string                       `json:"costSavings"`
+	HasUI               *string                       `json:"hasUi"`
+	Hosting             *BusinessCaseSolutionHosting  `json:"hosting"`
+	Pros                *string                       `json:"pros"`
+	Security            *BusinessCaseSolutionSecurity `json:"security"`
+	Summary             *string                       `json:"summary"`
+	Title               *string                       `json:"title"`
+}
+
+// The shape of hosting for a business case solution
+type BusinessCaseSolutionHosting struct {
+	CloudServiceType *string `json:"cloudServiceType"`
+	Location         *string `json:"location"`
+	Type             *string `json:"type"`
+}
+
+// The shape of security for a business case solution
+type BusinessCaseSolutionSecurity struct {
+	IsApproved      *bool   `json:"isApproved"`
+	IsBeingReviewed *string `json:"isBeingReviewed"`
 }
 
 // A date for a contract

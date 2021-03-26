@@ -67,6 +67,92 @@ export default gql`
       requestType
       status
       submittedAt
+      businessCase {
+        id
+        alternativeASolution {
+          acquisitionApproach
+          cons
+          costSavings
+          hasUi
+          hosting {
+            cloudServiceType
+            location
+            type
+          }
+          pros
+          security {
+            isApproved
+            isBeingReviewed
+          }
+          summary
+          title
+        }
+        alternativeBSolution {
+          acquisitionApproach
+          cons
+          costSavings
+          hasUi
+          hosting {
+            cloudServiceType
+            location
+            type
+          }
+          pros
+          security {
+            isApproved
+            isBeingReviewed
+          }
+          summary
+          title
+        }
+        asIsSolution {
+          cons
+          costSavings
+          pros
+          summary
+          title
+        }
+        businessNeed
+        businessOwner {
+          name
+        }
+        cmsBenefit
+        euaUserId
+        lifecycleCostLines {
+          businessCaseId
+          cost
+          id
+          phase
+          solution
+          year
+        }
+        preferredSolution {
+          acquisitionApproach
+          cons
+          costSavings
+          hasUi
+          hosting {
+            cloudServiceType
+            location
+            type
+          }
+          pros
+          security {
+            isApproved
+            isBeingReviewed
+          }
+          summary
+          title
+        }
+        priorityAlignment
+        requestName
+        requester {
+          name
+          phoneNumber
+        }
+        successIndicators
+        status
+      }
     }
   }
 `;

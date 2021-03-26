@@ -68,8 +68,9 @@ const BusinessCaseReview = ({ businessCase }: BusinessCaseReviewProps) => {
         <AlternativeAnalysisReview
           asIsSolution={businessCase.asIsSolution}
           preferredSolution={businessCase.preferredSolution}
-          alternativeA={businessCase.alternativeA}
-          alternativeB={businessCase.alternativeB}
+          alternativeA={businessCase.alternativeASolution}
+          alternativeB={undefined}
+          // alternativeB={businessCase.alternativeBSolution}
         />
       </PDFExport>
       <UswdsLink

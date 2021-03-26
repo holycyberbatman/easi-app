@@ -120,35 +120,43 @@ func (r *accessibilityRequestDocumentResolver) UploadedAt(ctx context.Context, o
 
 func (r *businessCaseResolver) AlternativeASolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
 	return &model.BusinessCaseSolution{
-		AcquisitionApproach:     obj.AlternativeAAcquisitionApproach.Ptr(),
-		Cons:                    obj.AlternativeACons.Ptr(),
-		CostSavings:             obj.AlternativeACostSavings.Ptr(),
-		HasUI:                   obj.AlternativeAHasUI.Ptr(),
-		HostingCloudServiceType: obj.AlternativeAHostingCloudServiceType.Ptr(),
-		HostingLocation:         obj.AlternativeAHostingLocation.Ptr(),
-		HostingType:             obj.AlternativeAHostingType.Ptr(),
-		Pros:                    obj.AlternativeAPros.Ptr(),
-		SecurityIsApproved:      obj.AlternativeASecurityIsApproved.Ptr(),
-		SecurityIsBeingReviewed: obj.AlternativeASecurityIsBeingReviewed.Ptr(),
-		Summary:                 obj.AlternativeASummary.Ptr(),
-		Title:                   obj.AlternativeATitle.Ptr(),
+		AcquisitionApproach: obj.AlternativeAAcquisitionApproach.Ptr(),
+		Cons:                obj.AlternativeACons.Ptr(),
+		CostSavings:         obj.AlternativeACostSavings.Ptr(),
+		HasUI:               obj.AlternativeAHasUI.Ptr(),
+		Hosting: &model.BusinessCaseSolutionHosting{
+			CloudServiceType: obj.AlternativeAHostingCloudServiceType.Ptr(),
+			Location:         obj.AlternativeAHostingLocation.Ptr(),
+			Type:             obj.AlternativeAHostingType.Ptr(),
+		},
+		Pros: obj.AlternativeAPros.Ptr(),
+		Security: &model.BusinessCaseSolutionSecurity{
+			IsApproved:      obj.AlternativeASecurityIsApproved.Ptr(),
+			IsBeingReviewed: obj.AlternativeASecurityIsBeingReviewed.Ptr(),
+		},
+		Summary: obj.AlternativeASummary.Ptr(),
+		Title:   obj.AlternativeATitle.Ptr(),
 	}, nil
 }
 
 func (r *businessCaseResolver) AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
 	return &model.BusinessCaseSolution{
-		AcquisitionApproach:     obj.AlternativeBAcquisitionApproach.Ptr(),
-		Cons:                    obj.AlternativeBCons.Ptr(),
-		CostSavings:             obj.AlternativeBCostSavings.Ptr(),
-		HasUI:                   obj.AlternativeBHasUI.Ptr(),
-		HostingCloudServiceType: obj.AlternativeBHostingCloudServiceType.Ptr(),
-		HostingLocation:         obj.AlternativeBHostingLocation.Ptr(),
-		HostingType:             obj.AlternativeBHostingType.Ptr(),
-		Pros:                    obj.AlternativeBPros.Ptr(),
-		SecurityIsApproved:      obj.AlternativeBSecurityIsApproved.Ptr(),
-		SecurityIsBeingReviewed: obj.AlternativeBSecurityIsBeingReviewed.Ptr(),
-		Summary:                 obj.AlternativeBSummary.Ptr(),
-		Title:                   obj.AlternativeBTitle.Ptr(),
+		AcquisitionApproach: obj.AlternativeBAcquisitionApproach.Ptr(),
+		Cons:                obj.AlternativeBCons.Ptr(),
+		CostSavings:         obj.AlternativeBCostSavings.Ptr(),
+		HasUI:               obj.AlternativeBHasUI.Ptr(),
+		Hosting: &model.BusinessCaseSolutionHosting{
+			CloudServiceType: obj.AlternativeBHostingCloudServiceType.Ptr(),
+			Location:         obj.AlternativeBHostingLocation.Ptr(),
+			Type:             obj.AlternativeBHostingType.Ptr(),
+		},
+		Pros: obj.AlternativeBPros.Ptr(),
+		Security: &model.BusinessCaseSolutionSecurity{
+			IsApproved:      obj.AlternativeBSecurityIsApproved.Ptr(),
+			IsBeingReviewed: obj.AlternativeBSecurityIsBeingReviewed.Ptr(),
+		},
+		Summary: obj.AlternativeBSummary.Ptr(),
+		Title:   obj.AlternativeBTitle.Ptr(),
 	}, nil
 }
 
@@ -166,8 +174,10 @@ func (r *businessCaseResolver) BusinessNeed(ctx context.Context, obj *models.Bus
 	return obj.BusinessNeed.Ptr(), nil
 }
 
-func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.BusinessOwner.Ptr(), nil
+func (r *businessCaseResolver) BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseBusinessOwner, error) {
+	return &model.BusinessCaseBusinessOwner{
+		Name: obj.BusinessOwner.Ptr(),
+	}, nil
 }
 
 func (r *businessCaseResolver) CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error) {
@@ -199,18 +209,22 @@ func (r *businessCaseResolver) LifecycleCostLines(ctx context.Context, obj *mode
 
 func (r *businessCaseResolver) PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error) {
 	return &model.BusinessCaseSolution{
-		AcquisitionApproach:     obj.PreferredAcquisitionApproach.Ptr(),
-		Cons:                    obj.PreferredCons.Ptr(),
-		CostSavings:             obj.PreferredCostSavings.Ptr(),
-		HasUI:                   obj.PreferredHasUI.Ptr(),
-		HostingCloudServiceType: obj.PreferredHostingCloudServiceType.Ptr(),
-		HostingLocation:         obj.PreferredHostingLocation.Ptr(),
-		HostingType:             obj.PreferredHostingType.Ptr(),
-		Pros:                    obj.PreferredPros.Ptr(),
-		SecurityIsApproved:      obj.PreferredSecurityIsApproved.Ptr(),
-		SecurityIsBeingReviewed: obj.PreferredSecurityIsBeingReviewed.Ptr(),
-		Summary:                 obj.PreferredSummary.Ptr(),
-		Title:                   obj.PreferredTitle.Ptr(),
+		AcquisitionApproach: obj.PreferredAcquisitionApproach.Ptr(),
+		Cons:                obj.PreferredCons.Ptr(),
+		CostSavings:         obj.PreferredCostSavings.Ptr(),
+		HasUI:               obj.PreferredHasUI.Ptr(),
+		Hosting: &model.BusinessCaseSolutionHosting{
+			CloudServiceType: obj.PreferredHostingCloudServiceType.Ptr(),
+			Location:         obj.PreferredHostingLocation.Ptr(),
+			Type:             obj.PreferredHostingType.Ptr(),
+		},
+		Pros: obj.PreferredPros.Ptr(),
+		Security: &model.BusinessCaseSolutionSecurity{
+			IsApproved:      obj.PreferredSecurityIsApproved.Ptr(),
+			IsBeingReviewed: obj.PreferredSecurityIsBeingReviewed.Ptr(),
+		},
+		Summary: obj.PreferredSummary.Ptr(),
+		Title:   obj.PreferredTitle.Ptr(),
 	}, nil
 }
 
@@ -218,16 +232,15 @@ func (r *businessCaseResolver) PriorityAlignment(ctx context.Context, obj *model
 	return obj.PriorityAlignment.Ptr(), nil
 }
 
-func (r *businessCaseResolver) ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error) {
+func (r *businessCaseResolver) RequestName(ctx context.Context, obj *models.BusinessCase) (*string, error) {
 	return obj.ProjectName.Ptr(), nil
 }
 
-func (r *businessCaseResolver) Requester(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.Requester.Ptr(), nil
-}
-
-func (r *businessCaseResolver) RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error) {
-	return obj.RequesterPhoneNumber.Ptr(), nil
+func (r *businessCaseResolver) Requester(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseRequester, error) {
+	return &model.BusinessCaseRequester{
+		Name:        obj.Requester.Ptr(),
+		PhoneNumber: obj.RequesterPhoneNumber.Ptr(),
+	}, nil
 }
 
 func (r *businessCaseResolver) SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error) {

@@ -265,6 +265,38 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The shape of a business owner for a business case
+"""
+type BusinessCaseBusinessOwner {
+  name: String
+}
+
+"""
+The shape of a requester for a business case
+"""
+type BusinessCaseRequester {
+  name: String
+  phoneNumber: String
+}
+
+"""
+The shape of hosting for a business case solution
+"""
+type BusinessCaseSolutionHosting {
+  cloudServiceType: String
+  location: String
+  type: String
+}
+
+"""
+The shape of security for a business case solution
+"""
+type BusinessCaseSolutionSecurity {
+  isApproved: Boolean
+  isBeingReviewed: String
+}
+
+"""
 The shape of a solution for a business case
 """
 type BusinessCaseSolution {
@@ -272,12 +304,9 @@ type BusinessCaseSolution {
   cons: String
   costSavings: String
   hasUi: String
-  hostingCloudServiceType: String
-  hostingLocation: String
-  hostingType: String
+  hosting: BusinessCaseSolutionHosting
   pros: String
-  securityIsApproved: Boolean
-  securityIsBeingReviewed: String
+  security: BusinessCaseSolutionSecurity
   summary: String
   title: String
 }
@@ -393,7 +422,7 @@ type BusinessCase {
   alternativeBSolution: BusinessCaseSolution
   asIsSolution: BusinessCaseAsIsSolution
   businessNeed: String
-  businessOwner: String
+  businessOwner: BusinessCaseBusinessOwner
   cmsBenefit: String
   createdAt: Time!
   euaUserId: String!
@@ -403,9 +432,8 @@ type BusinessCase {
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
-  projectName: String
-  requester: String
-  requesterPhoneNumber: String
+  requestName: String
+  requester: BusinessCaseRequester
   status: BusinessCaseStatus!
   submittedAt: Time
   successIndicators: String

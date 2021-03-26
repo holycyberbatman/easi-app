@@ -108,9 +108,8 @@ type ComplexityRoot struct {
 		LifecycleCostLines   func(childComplexity int) int
 		PreferredSolution    func(childComplexity int) int
 		PriorityAlignment    func(childComplexity int) int
-		ProjectName          func(childComplexity int) int
+		RequestName          func(childComplexity int) int
 		Requester            func(childComplexity int) int
-		RequesterPhoneNumber func(childComplexity int) int
 		Status               func(childComplexity int) int
 		SubmittedAt          func(childComplexity int) int
 		SuccessIndicators    func(childComplexity int) int
@@ -126,19 +125,36 @@ type ComplexityRoot struct {
 		Title       func(childComplexity int) int
 	}
 
+	BusinessCaseBusinessOwner struct {
+		Name func(childComplexity int) int
+	}
+
+	BusinessCaseRequester struct {
+		Name        func(childComplexity int) int
+		PhoneNumber func(childComplexity int) int
+	}
+
 	BusinessCaseSolution struct {
-		AcquisitionApproach     func(childComplexity int) int
-		Cons                    func(childComplexity int) int
-		CostSavings             func(childComplexity int) int
-		HasUI                   func(childComplexity int) int
-		HostingCloudServiceType func(childComplexity int) int
-		HostingLocation         func(childComplexity int) int
-		HostingType             func(childComplexity int) int
-		Pros                    func(childComplexity int) int
-		SecurityIsApproved      func(childComplexity int) int
-		SecurityIsBeingReviewed func(childComplexity int) int
-		Summary                 func(childComplexity int) int
-		Title                   func(childComplexity int) int
+		AcquisitionApproach func(childComplexity int) int
+		Cons                func(childComplexity int) int
+		CostSavings         func(childComplexity int) int
+		HasUI               func(childComplexity int) int
+		Hosting             func(childComplexity int) int
+		Pros                func(childComplexity int) int
+		Security            func(childComplexity int) int
+		Summary             func(childComplexity int) int
+		Title               func(childComplexity int) int
+	}
+
+	BusinessCaseSolutionHosting struct {
+		CloudServiceType func(childComplexity int) int
+		Location         func(childComplexity int) int
+		Type             func(childComplexity int) int
+	}
+
+	BusinessCaseSolutionSecurity struct {
+		IsApproved      func(childComplexity int) int
+		IsBeingReviewed func(childComplexity int) int
 	}
 
 	BusinessOwner struct {
@@ -377,15 +393,14 @@ type BusinessCaseResolver interface {
 	AlternativeBSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 	AsIsSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseAsIsSolution, error)
 	BusinessNeed(ctx context.Context, obj *models.BusinessCase) (*string, error)
-	BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	BusinessOwner(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseBusinessOwner, error)
 	CmsBenefit(ctx context.Context, obj *models.BusinessCase) (*string, error)
 
 	LifecycleCostLines(ctx context.Context, obj *models.BusinessCase) ([]*models.EstimatedLifecycleCost, error)
 	PreferredSolution(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseSolution, error)
 	PriorityAlignment(ctx context.Context, obj *models.BusinessCase) (*string, error)
-	ProjectName(ctx context.Context, obj *models.BusinessCase) (*string, error)
-	Requester(ctx context.Context, obj *models.BusinessCase) (*string, error)
-	RequesterPhoneNumber(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	RequestName(ctx context.Context, obj *models.BusinessCase) (*string, error)
+	Requester(ctx context.Context, obj *models.BusinessCase) (*model.BusinessCaseRequester, error)
 
 	SuccessIndicators(ctx context.Context, obj *models.BusinessCase) (*string, error)
 	SystemIntake(ctx context.Context, obj *models.BusinessCase) (*models.SystemIntake, error)
@@ -729,12 +744,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessCase.PriorityAlignment(childComplexity), true
 
-	case "BusinessCase.projectName":
-		if e.complexity.BusinessCase.ProjectName == nil {
+	case "BusinessCase.requestName":
+		if e.complexity.BusinessCase.RequestName == nil {
 			break
 		}
 
-		return e.complexity.BusinessCase.ProjectName(childComplexity), true
+		return e.complexity.BusinessCase.RequestName(childComplexity), true
 
 	case "BusinessCase.requester":
 		if e.complexity.BusinessCase.Requester == nil {
@@ -742,13 +757,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCase.Requester(childComplexity), true
-
-	case "BusinessCase.requesterPhoneNumber":
-		if e.complexity.BusinessCase.RequesterPhoneNumber == nil {
-			break
-		}
-
-		return e.complexity.BusinessCase.RequesterPhoneNumber(childComplexity), true
 
 	case "BusinessCase.status":
 		if e.complexity.BusinessCase.Status == nil {
@@ -820,6 +828,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessCaseAsIsSolution.Title(childComplexity), true
 
+	case "BusinessCaseBusinessOwner.name":
+		if e.complexity.BusinessCaseBusinessOwner.Name == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseBusinessOwner.Name(childComplexity), true
+
+	case "BusinessCaseRequester.name":
+		if e.complexity.BusinessCaseRequester.Name == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseRequester.Name(childComplexity), true
+
+	case "BusinessCaseRequester.phoneNumber":
+		if e.complexity.BusinessCaseRequester.PhoneNumber == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseRequester.PhoneNumber(childComplexity), true
+
 	case "BusinessCaseSolution.acquisitionApproach":
 		if e.complexity.BusinessCaseSolution.AcquisitionApproach == nil {
 			break
@@ -848,26 +877,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessCaseSolution.HasUI(childComplexity), true
 
-	case "BusinessCaseSolution.hostingCloudServiceType":
-		if e.complexity.BusinessCaseSolution.HostingCloudServiceType == nil {
+	case "BusinessCaseSolution.hosting":
+		if e.complexity.BusinessCaseSolution.Hosting == nil {
 			break
 		}
 
-		return e.complexity.BusinessCaseSolution.HostingCloudServiceType(childComplexity), true
-
-	case "BusinessCaseSolution.hostingLocation":
-		if e.complexity.BusinessCaseSolution.HostingLocation == nil {
-			break
-		}
-
-		return e.complexity.BusinessCaseSolution.HostingLocation(childComplexity), true
-
-	case "BusinessCaseSolution.hostingType":
-		if e.complexity.BusinessCaseSolution.HostingType == nil {
-			break
-		}
-
-		return e.complexity.BusinessCaseSolution.HostingType(childComplexity), true
+		return e.complexity.BusinessCaseSolution.Hosting(childComplexity), true
 
 	case "BusinessCaseSolution.pros":
 		if e.complexity.BusinessCaseSolution.Pros == nil {
@@ -876,19 +891,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.BusinessCaseSolution.Pros(childComplexity), true
 
-	case "BusinessCaseSolution.securityIsApproved":
-		if e.complexity.BusinessCaseSolution.SecurityIsApproved == nil {
+	case "BusinessCaseSolution.security":
+		if e.complexity.BusinessCaseSolution.Security == nil {
 			break
 		}
 
-		return e.complexity.BusinessCaseSolution.SecurityIsApproved(childComplexity), true
-
-	case "BusinessCaseSolution.securityIsBeingReviewed":
-		if e.complexity.BusinessCaseSolution.SecurityIsBeingReviewed == nil {
-			break
-		}
-
-		return e.complexity.BusinessCaseSolution.SecurityIsBeingReviewed(childComplexity), true
+		return e.complexity.BusinessCaseSolution.Security(childComplexity), true
 
 	case "BusinessCaseSolution.summary":
 		if e.complexity.BusinessCaseSolution.Summary == nil {
@@ -903,6 +911,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.BusinessCaseSolution.Title(childComplexity), true
+
+	case "BusinessCaseSolutionHosting.cloudServiceType":
+		if e.complexity.BusinessCaseSolutionHosting.CloudServiceType == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolutionHosting.CloudServiceType(childComplexity), true
+
+	case "BusinessCaseSolutionHosting.location":
+		if e.complexity.BusinessCaseSolutionHosting.Location == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolutionHosting.Location(childComplexity), true
+
+	case "BusinessCaseSolutionHosting.type":
+		if e.complexity.BusinessCaseSolutionHosting.Type == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolutionHosting.Type(childComplexity), true
+
+	case "BusinessCaseSolutionSecurity.isApproved":
+		if e.complexity.BusinessCaseSolutionSecurity.IsApproved == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolutionSecurity.IsApproved(childComplexity), true
+
+	case "BusinessCaseSolutionSecurity.isBeingReviewed":
+		if e.complexity.BusinessCaseSolutionSecurity.IsBeingReviewed == nil {
+			break
+		}
+
+		return e.complexity.BusinessCaseSolutionSecurity.IsBeingReviewed(childComplexity), true
 
 	case "BusinessOwner.component":
 		if e.complexity.BusinessOwner.Component == nil {
@@ -2272,6 +2315,38 @@ type CreateAccessibilityRequestDocumentPayload {
 }
 
 """
+The shape of a business owner for a business case
+"""
+type BusinessCaseBusinessOwner {
+  name: String
+}
+
+"""
+The shape of a requester for a business case
+"""
+type BusinessCaseRequester {
+  name: String
+  phoneNumber: String
+}
+
+"""
+The shape of hosting for a business case solution
+"""
+type BusinessCaseSolutionHosting {
+  cloudServiceType: String
+  location: String
+  type: String
+}
+
+"""
+The shape of security for a business case solution
+"""
+type BusinessCaseSolutionSecurity {
+  isApproved: Boolean
+  isBeingReviewed: String
+}
+
+"""
 The shape of a solution for a business case
 """
 type BusinessCaseSolution {
@@ -2279,12 +2354,9 @@ type BusinessCaseSolution {
   cons: String
   costSavings: String
   hasUi: String
-  hostingCloudServiceType: String
-  hostingLocation: String
-  hostingType: String
+  hosting: BusinessCaseSolutionHosting
   pros: String
-  securityIsApproved: Boolean
-  securityIsBeingReviewed: String
+  security: BusinessCaseSolutionSecurity
   summary: String
   title: String
 }
@@ -2400,7 +2472,7 @@ type BusinessCase {
   alternativeBSolution: BusinessCaseSolution
   asIsSolution: BusinessCaseAsIsSolution
   businessNeed: String
-  businessOwner: String
+  businessOwner: BusinessCaseBusinessOwner
   cmsBenefit: String
   createdAt: Time!
   euaUserId: String!
@@ -2410,9 +2482,8 @@ type BusinessCase {
   lifecycleCostLines: [EstimatedLifecycleCost!]
   preferredSolution: BusinessCaseSolution
   priorityAlignment: String
-  projectName: String
-  requester: String
-  requesterPhoneNumber: String
+  requestName: String
+  requester: BusinessCaseRequester
   status: BusinessCaseStatus!
   submittedAt: Time
   successIndicators: String
@@ -4231,9 +4302,9 @@ func (ec *executionContext) _BusinessCase_businessOwner(ctx context.Context, fie
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.BusinessCaseBusinessOwner)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOBusinessCaseBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseBusinessOwner(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_cmsBenefit(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -4533,7 +4604,7 @@ func (ec *executionContext) _BusinessCase_priorityAlignment(ctx context.Context,
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BusinessCase_projectName(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
+func (ec *executionContext) _BusinessCase_requestName(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -4551,7 +4622,7 @@ func (ec *executionContext) _BusinessCase_projectName(ctx context.Context, field
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.BusinessCase().ProjectName(rctx, obj)
+		return ec.resolvers.BusinessCase().RequestName(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4592,41 +4663,9 @@ func (ec *executionContext) _BusinessCase_requester(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.BusinessCaseRequester)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCase_requesterPhoneNumber(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCase",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   true,
-		IsResolver: true,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.BusinessCase().RequesterPhoneNumber(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOBusinessCaseRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseRequester(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCase_status(ctx context.Context, field graphql.CollectedField, obj *models.BusinessCase) (ret graphql.Marshaler) {
@@ -4958,6 +4997,102 @@ func (ec *executionContext) _BusinessCaseAsIsSolution_title(ctx context.Context,
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _BusinessCaseBusinessOwner_name(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseBusinessOwner) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseBusinessOwner",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseRequester_name(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseRequester) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseRequester",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseRequester_phoneNumber(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseRequester) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseRequester",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.PhoneNumber, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _BusinessCaseSolution_acquisitionApproach(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -5086,7 +5221,7 @@ func (ec *executionContext) _BusinessCaseSolution_hasUi(ctx context.Context, fie
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BusinessCaseSolution_hostingCloudServiceType(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+func (ec *executionContext) _BusinessCaseSolution_hosting(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5104,7 +5239,7 @@ func (ec *executionContext) _BusinessCaseSolution_hostingCloudServiceType(ctx co
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.HostingCloudServiceType, nil
+		return obj.Hosting, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5113,73 +5248,9 @@ func (ec *executionContext) _BusinessCaseSolution_hostingCloudServiceType(ctx co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(*model.BusinessCaseSolutionHosting)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCaseSolution_hostingLocation(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCaseSolution",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.HostingLocation, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCaseSolution_hostingType(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCaseSolution",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.HostingType, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOBusinessCaseSolutionHosting2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolutionHosting(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCaseSolution_pros(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
@@ -5214,7 +5285,7 @@ func (ec *executionContext) _BusinessCaseSolution_pros(ctx context.Context, fiel
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _BusinessCaseSolution_securityIsApproved(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
+func (ec *executionContext) _BusinessCaseSolution_security(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -5232,7 +5303,7 @@ func (ec *executionContext) _BusinessCaseSolution_securityIsApproved(ctx context
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.SecurityIsApproved, nil
+		return obj.Security, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5241,41 +5312,9 @@ func (ec *executionContext) _BusinessCaseSolution_securityIsApproved(ctx context
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(*model.BusinessCaseSolutionSecurity)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _BusinessCaseSolution_securityIsBeingReviewed(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "BusinessCaseSolution",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.SecurityIsBeingReviewed, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		return graphql.Null
-	}
-	res := resTmp.(*string)
-	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOBusinessCaseSolutionSecurity2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolutionSecurity(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _BusinessCaseSolution_summary(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolution) (ret graphql.Marshaler) {
@@ -5329,6 +5368,166 @@ func (ec *executionContext) _BusinessCaseSolution_title(ctx context.Context, fie
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Title, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolutionHosting_cloudServiceType(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolutionHosting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolutionHosting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CloudServiceType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolutionHosting_location(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolutionHosting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolutionHosting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Location, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolutionHosting_type(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolutionHosting) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolutionHosting",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Type, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolutionSecurity_isApproved(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolutionSecurity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolutionSecurity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsApproved, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*bool)
+	fc.Result = res
+	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _BusinessCaseSolutionSecurity_isBeingReviewed(ctx context.Context, field graphql.CollectedField, obj *model.BusinessCaseSolutionSecurity) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "BusinessCaseSolutionSecurity",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.IsBeingReviewed, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12234,7 +12433,7 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 				res = ec._BusinessCase_priorityAlignment(ctx, field, obj)
 				return res
 			})
-		case "projectName":
+		case "requestName":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -12242,7 +12441,7 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._BusinessCase_projectName(ctx, field, obj)
+				res = ec._BusinessCase_requestName(ctx, field, obj)
 				return res
 			})
 		case "requester":
@@ -12254,17 +12453,6 @@ func (ec *executionContext) _BusinessCase(ctx context.Context, sel ast.Selection
 					}
 				}()
 				res = ec._BusinessCase_requester(ctx, field, obj)
-				return res
-			})
-		case "requesterPhoneNumber":
-			field := field
-			out.Concurrently(i, func() (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._BusinessCase_requesterPhoneNumber(ctx, field, obj)
 				return res
 			})
 		case "status":
@@ -12347,6 +12535,56 @@ func (ec *executionContext) _BusinessCaseAsIsSolution(ctx context.Context, sel a
 	return out
 }
 
+var businessCaseBusinessOwnerImplementors = []string{"BusinessCaseBusinessOwner"}
+
+func (ec *executionContext) _BusinessCaseBusinessOwner(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseBusinessOwner) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseBusinessOwnerImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseBusinessOwner")
+		case "name":
+			out.Values[i] = ec._BusinessCaseBusinessOwner_name(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var businessCaseRequesterImplementors = []string{"BusinessCaseRequester"}
+
+func (ec *executionContext) _BusinessCaseRequester(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseRequester) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseRequesterImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseRequester")
+		case "name":
+			out.Values[i] = ec._BusinessCaseRequester_name(ctx, field, obj)
+		case "phoneNumber":
+			out.Values[i] = ec._BusinessCaseRequester_phoneNumber(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var businessCaseSolutionImplementors = []string{"BusinessCaseSolution"}
 
 func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseSolution) graphql.Marshaler {
@@ -12366,22 +12604,70 @@ func (ec *executionContext) _BusinessCaseSolution(ctx context.Context, sel ast.S
 			out.Values[i] = ec._BusinessCaseSolution_costSavings(ctx, field, obj)
 		case "hasUi":
 			out.Values[i] = ec._BusinessCaseSolution_hasUi(ctx, field, obj)
-		case "hostingCloudServiceType":
-			out.Values[i] = ec._BusinessCaseSolution_hostingCloudServiceType(ctx, field, obj)
-		case "hostingLocation":
-			out.Values[i] = ec._BusinessCaseSolution_hostingLocation(ctx, field, obj)
-		case "hostingType":
-			out.Values[i] = ec._BusinessCaseSolution_hostingType(ctx, field, obj)
+		case "hosting":
+			out.Values[i] = ec._BusinessCaseSolution_hosting(ctx, field, obj)
 		case "pros":
 			out.Values[i] = ec._BusinessCaseSolution_pros(ctx, field, obj)
-		case "securityIsApproved":
-			out.Values[i] = ec._BusinessCaseSolution_securityIsApproved(ctx, field, obj)
-		case "securityIsBeingReviewed":
-			out.Values[i] = ec._BusinessCaseSolution_securityIsBeingReviewed(ctx, field, obj)
+		case "security":
+			out.Values[i] = ec._BusinessCaseSolution_security(ctx, field, obj)
 		case "summary":
 			out.Values[i] = ec._BusinessCaseSolution_summary(ctx, field, obj)
 		case "title":
 			out.Values[i] = ec._BusinessCaseSolution_title(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var businessCaseSolutionHostingImplementors = []string{"BusinessCaseSolutionHosting"}
+
+func (ec *executionContext) _BusinessCaseSolutionHosting(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseSolutionHosting) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseSolutionHostingImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseSolutionHosting")
+		case "cloudServiceType":
+			out.Values[i] = ec._BusinessCaseSolutionHosting_cloudServiceType(ctx, field, obj)
+		case "location":
+			out.Values[i] = ec._BusinessCaseSolutionHosting_location(ctx, field, obj)
+		case "type":
+			out.Values[i] = ec._BusinessCaseSolutionHosting_type(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var businessCaseSolutionSecurityImplementors = []string{"BusinessCaseSolutionSecurity"}
+
+func (ec *executionContext) _BusinessCaseSolutionSecurity(ctx context.Context, sel ast.SelectionSet, obj *model.BusinessCaseSolutionSecurity) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, businessCaseSolutionSecurityImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BusinessCaseSolutionSecurity")
+		case "isApproved":
+			out.Values[i] = ec._BusinessCaseSolutionSecurity_isApproved(ctx, field, obj)
+		case "isBeingReviewed":
+			out.Values[i] = ec._BusinessCaseSolutionSecurity_isBeingReviewed(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -14834,11 +15120,39 @@ func (ec *executionContext) marshalOBusinessCaseAsIsSolution2ᚖgithubᚗcomᚋc
 	return ec._BusinessCaseAsIsSolution(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOBusinessCaseBusinessOwner2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseBusinessOwner(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseBusinessOwner) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseBusinessOwner(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBusinessCaseRequester2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseRequester(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseRequester) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseRequester(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOBusinessCaseSolution2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolution(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseSolution) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._BusinessCaseSolution(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBusinessCaseSolutionHosting2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolutionHosting(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseSolutionHosting) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseSolutionHosting(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOBusinessCaseSolutionSecurity2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐBusinessCaseSolutionSecurity(ctx context.Context, sel ast.SelectionSet, v *model.BusinessCaseSolutionSecurity) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BusinessCaseSolutionSecurity(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOContractDate2ᚖgithubᚗcomᚋcmsgovᚋeasiᚑappᚋpkgᚋgraphᚋmodelᚐContractDate(ctx context.Context, sel ast.SelectionSet, v *model.ContractDate) graphql.Marshaler {

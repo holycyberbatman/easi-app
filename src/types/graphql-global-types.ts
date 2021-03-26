@@ -29,6 +29,44 @@ export enum AccessibilityRequestDocumentStatus {
 }
 
 /**
+ * Business Case status options
+ */
+export enum BusinessCaseStatus {
+  CLOSED = "CLOSED",
+  OPEN = "OPEN",
+}
+
+/**
+ * enum
+ */
+export enum LifecycleCostPhase {
+  DEVELOPMENT = "DEVELOPMENT",
+  OPERATIONS_AND_MAINTENANCE = "OPERATIONS_AND_MAINTENANCE",
+  OTHER = "OTHER",
+}
+
+/**
+ * enum
+ */
+export enum LifecycleCostSolution {
+  A = "A",
+  AS_IS = "AS_IS",
+  B = "B",
+  PREFERRED = "PREFERRED",
+}
+
+/**
+ * enum
+ */
+export enum LifecycleCostYear {
+  LIFECYCLE_COST_YEAR_1 = "LIFECYCLE_COST_YEAR_1",
+  LIFECYCLE_COST_YEAR_2 = "LIFECYCLE_COST_YEAR_2",
+  LIFECYCLE_COST_YEAR_3 = "LIFECYCLE_COST_YEAR_3",
+  LIFECYCLE_COST_YEAR_4 = "LIFECYCLE_COST_YEAR_4",
+  LIFECYCLE_COST_YEAR_5 = "LIFECYCLE_COST_YEAR_5",
+}
+
+/**
  * The request types for a system intake
  */
 export enum SystemIntakeRequestType {

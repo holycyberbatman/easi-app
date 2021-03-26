@@ -3,7 +3,7 @@
 // @generated
 // This file was automatically generated and should not be edited.
 
-import { SystemIntakeRequestType, SystemIntakeStatus } from "./../../types/graphql-global-types";
+import { SystemIntakeRequestType, SystemIntakeStatus, LifecycleCostPhase, LifecycleCostSolution, LifecycleCostYear, BusinessCaseStatus } from "./../../types/graphql-global-types";
 
 // ====================================================
 // GraphQL query operation: GetSystemIntake
@@ -85,6 +85,133 @@ export interface GetSystemIntake_systemIntake_requester {
   name: string;
 }
 
+export interface GetSystemIntake_systemIntake_businessCase_alternativeASolution_hosting {
+  __typename: "BusinessCaseSolutionHosting";
+  cloudServiceType: string | null;
+  location: string | null;
+  type: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_alternativeASolution_security {
+  __typename: "BusinessCaseSolutionSecurity";
+  isApproved: boolean | null;
+  isBeingReviewed: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_alternativeASolution {
+  __typename: "BusinessCaseSolution";
+  acquisitionApproach: string | null;
+  cons: string | null;
+  costSavings: string | null;
+  hasUi: string | null;
+  hosting: GetSystemIntake_systemIntake_businessCase_alternativeASolution_hosting | null;
+  pros: string | null;
+  security: GetSystemIntake_systemIntake_businessCase_alternativeASolution_security | null;
+  summary: string | null;
+  title: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_alternativeBSolution_hosting {
+  __typename: "BusinessCaseSolutionHosting";
+  cloudServiceType: string | null;
+  location: string | null;
+  type: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_alternativeBSolution_security {
+  __typename: "BusinessCaseSolutionSecurity";
+  isApproved: boolean | null;
+  isBeingReviewed: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_alternativeBSolution {
+  __typename: "BusinessCaseSolution";
+  acquisitionApproach: string | null;
+  cons: string | null;
+  costSavings: string | null;
+  hasUi: string | null;
+  hosting: GetSystemIntake_systemIntake_businessCase_alternativeBSolution_hosting | null;
+  pros: string | null;
+  security: GetSystemIntake_systemIntake_businessCase_alternativeBSolution_security | null;
+  summary: string | null;
+  title: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_asIsSolution {
+  __typename: "BusinessCaseAsIsSolution";
+  cons: string | null;
+  costSavings: string | null;
+  pros: string | null;
+  summary: string | null;
+  title: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_businessOwner {
+  __typename: "BusinessCaseBusinessOwner";
+  name: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_lifecycleCostLines {
+  __typename: "EstimatedLifecycleCost";
+  businessCaseId: UUID;
+  cost: number | null;
+  id: UUID;
+  phase: LifecycleCostPhase | null;
+  solution: LifecycleCostSolution | null;
+  year: LifecycleCostYear | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_preferredSolution_hosting {
+  __typename: "BusinessCaseSolutionHosting";
+  cloudServiceType: string | null;
+  location: string | null;
+  type: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_preferredSolution_security {
+  __typename: "BusinessCaseSolutionSecurity";
+  isApproved: boolean | null;
+  isBeingReviewed: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_preferredSolution {
+  __typename: "BusinessCaseSolution";
+  acquisitionApproach: string | null;
+  cons: string | null;
+  costSavings: string | null;
+  hasUi: string | null;
+  hosting: GetSystemIntake_systemIntake_businessCase_preferredSolution_hosting | null;
+  pros: string | null;
+  security: GetSystemIntake_systemIntake_businessCase_preferredSolution_security | null;
+  summary: string | null;
+  title: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase_requester {
+  __typename: "BusinessCaseRequester";
+  name: string | null;
+  phoneNumber: string | null;
+}
+
+export interface GetSystemIntake_systemIntake_businessCase {
+  __typename: "BusinessCase";
+  id: UUID;
+  alternativeASolution: GetSystemIntake_systemIntake_businessCase_alternativeASolution | null;
+  alternativeBSolution: GetSystemIntake_systemIntake_businessCase_alternativeBSolution | null;
+  asIsSolution: GetSystemIntake_systemIntake_businessCase_asIsSolution | null;
+  businessNeed: string | null;
+  businessOwner: GetSystemIntake_systemIntake_businessCase_businessOwner | null;
+  cmsBenefit: string | null;
+  euaUserId: string;
+  lifecycleCostLines: GetSystemIntake_systemIntake_businessCase_lifecycleCostLines[] | null;
+  preferredSolution: GetSystemIntake_systemIntake_businessCase_preferredSolution | null;
+  priorityAlignment: string | null;
+  requestName: string | null;
+  requester: GetSystemIntake_systemIntake_businessCase_requester | null;
+  successIndicators: string | null;
+  status: BusinessCaseStatus;
+}
+
 export interface GetSystemIntake_systemIntake {
   __typename: "SystemIntake";
   id: UUID;
@@ -108,6 +235,7 @@ export interface GetSystemIntake_systemIntake {
   requestType: SystemIntakeRequestType;
   status: SystemIntakeStatus;
   submittedAt: Time | null;
+  businessCase: GetSystemIntake_systemIntake_businessCase | null;
 }
 
 export interface GetSystemIntake {

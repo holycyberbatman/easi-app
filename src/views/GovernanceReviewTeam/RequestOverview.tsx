@@ -24,7 +24,7 @@ import Header from 'components/Header';
 import MainContent from 'components/MainContent';
 import PageWrapper from 'components/PageWrapper';
 import { AppState } from 'reducers/rootReducer';
-import { fetchBusinessCase, fetchSystemIntake } from 'types/routines';
+import { fetchSystemIntake } from 'types/routines';
 import ProvideGRTFeedbackToBusinessOwner from 'views/GovernanceReviewTeam/Actions/ProvideGRTFeedbackToBusinessOwner';
 import ProvideGRTRecommendationsToGRB from 'views/GovernanceReviewTeam/Actions/ProvideGRTRecommendationsToGRB';
 
@@ -55,24 +55,15 @@ const RequestOverview = () => {
     }
   );
   const intake = graphData?.systemIntake;
+  const businessCase = intake?.businessCase;
 
   const systemIntake = useSelector(
     (state: AppState) => state.systemIntake.systemIntake
   );
 
-  const businessCase = useSelector(
-    (state: AppState) => state.businessCase.form
-  );
-
   useEffect(() => {
     dispatch(fetchSystemIntake(systemId));
   }, [dispatch, systemId]);
-
-  useEffect(() => {
-    if (systemIntake.businessCaseId) {
-      dispatch(fetchBusinessCase(systemIntake.businessCaseId));
-    }
-  }, [dispatch, systemIntake.businessCaseId]);
 
   const getNavLinkClasses = (page: string) =>
     classnames('easi-grt__nav-link', {
@@ -161,7 +152,12 @@ const RequestOverview = () => {
             />
             <Route
               path="/governance-review-team/:systemId/business-case"
-              render={() => <BusinessCaseReview businessCase={businessCase} />}
+              render={() => {
+                if (loading) {
+                  return <p>Loading...</p>;
+                }
+                return <BusinessCaseReview businessCase={businessCase} />;
+              }}
             />
             <Route
               path="/governance-review-team/:systemId/notes"
