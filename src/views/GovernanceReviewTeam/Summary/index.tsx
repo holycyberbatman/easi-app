@@ -10,6 +10,7 @@ import UpdateSystemIntakeAdminLeadQuery from 'queries/UpdateSystemIntakeAdminLea
 
 import BreadcrumbNav from 'components/BreadcrumbNav';
 import Modal from 'components/Modal';
+import PageHeading from 'components/PageHeading';
 import { ErrorAlert, ErrorAlertMessage } from 'components/shared/ErrorAlert';
 import { RadioField, RadioGroup } from 'components/shared/RadioField';
 import cmsDivisionsAndOffices from 'constants/enums/cmsDivisionsAndOffices';
@@ -77,26 +78,28 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
 
   // Admin lead modal radio button
   type AdminLeadRadioOptionProps = {
-    checked: boolean;
+    // checked: boolean;
     label: string;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    // onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
 
   const AdminLeadRadioOption = ({
-    checked,
-    label,
-    onChange
-  }: AdminLeadRadioOptionProps) => {
+    // checked,
+    label
+  }: // onChange
+  AdminLeadRadioOptionProps) => {
     const radioFieldClassName = 'margin-y-3';
 
     return (
       <RadioField
-        checked={checked}
+        checked={label === newAdminLead}
         id={label}
         label={label}
-        name={label}
+        name="adminLeadOption"
         value={label}
-        onChange={onChange}
+        onChange={() => {
+          setAdminLead(label);
+        }}
         className={radioFieldClassName}
       />
     );
@@ -194,21 +197,14 @@ const RequestSummary = ({ intake }: { intake: SystemIntake }) => {
                     setModalOpen(false);
                   }}
                 >
-                  <h1 className="margin-top-0 font-heading-2xl line-height-heading-2">
+                  <PageHeading headingLevel="h2" className="margin-top-0">
                     {t('governanceReviewTeam:adminLeads:assignModal.header', {
                       requestName: intake.requestName
                     })}
-                  </h1>
+                  </PageHeading>
                   <RadioGroup>
                     {grtMembers.map(k => (
-                      <AdminLeadRadioOption
-                        key={k}
-                        checked={k === newAdminLead}
-                        label={k}
-                        onChange={() => {
-                          setAdminLead(k);
-                        }}
-                      />
+                      <AdminLeadRadioOption key={k} label={k} />
                     ))}
                   </RadioGroup>
                   <Button
